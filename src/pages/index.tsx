@@ -1,34 +1,30 @@
 export default function Home() {
   return (
-    <div className="flex-1 px-2 py-12 ">
+    <div className="w-full px-20 py-12">
       <div className="px-8">
-        <div className="flex justify-end rounded-lg border border-gray-300 bg-gray-100 px-1">
-          <div className="w-full bg-gray-100">Goal1</div>
-          <div className="w-full rounded-lg border border-gray-300 bg-white">
-            haha
+        <div className="flex justify-end rounded-lg border border-gray-300 bg-gray-100 p-2">
+          <div className="p-2">
+            <div className="w-[272px] bg-gray-100 m-2">sidebar</div>
           </div>
-          {/* <div className="mx-auto grid gap-8 py-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 2xl:gap-8">
-            <div className="flex flex-col gap-6">
-              <div className="w-full max-w-md rounded-lg border border-gray-300 p-6">
-                column
+
+          <div className="w-full rounded-lg border border-gray-300 bg-white">
+            <div className="flex items-center h-[47px] border-b border-gray-300 px-6">
+              Goal 1
+            </div>
+            <div className="p-6">
+              <div className="mx-auto grid grid-cols-2 gap-5">
+                <div className="w-full h-[184px] rounded-xl border border-gray-300 p-6">
+                  column
+                </div>
+                <div className="w-full h-[184px] rounded-xl border border-gray-300 p-6">
+                  column
+                </div>
+              </div>
+              <div className="h-[390px] border border-gray-300 rounded-2xl mt-6 p-6">
+                calendar
               </div>
             </div>
-            <div className="flex flex-col gap-6">
-              <div className="w-full max-w-md rounded-lg border border-gray-300 p-6">
-                column
-              </div>
-            </div>
-            <div className="flex flex-col gap-6">
-              <div className="w-full max-w-md rounded-lg border border-gray-300 p-6">
-                column
-              </div>
-            </div>
-            <div className="flex flex-col gap-6">
-              <div className="w-full max-w-md rounded-lg border border-gray-300 p-6">
-                column
-              </div>
-            </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
