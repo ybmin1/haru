@@ -1,4 +1,5 @@
 import { useGoalStore } from "@/stores/useGoalStore";
+import Calendar from "@/components/Calendar";
 
 import Link from "next/link";
 
@@ -76,9 +77,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="h-[390px] border border-gray-200 rounded-2xl mt-6 p-6">
-                <div className="text-gray-400">Calendar</div>
-              </div>
+              <Calendar />
             </div>
           </div>
         </div>
