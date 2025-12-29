@@ -125,12 +125,9 @@ export default function GoalSetup() {
   function getWeekStart(weekIndex: number) {
     const today = new Date();
     const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    console.log(`first of month: ${firstOfMonth}`);
     const day = firstOfMonth.getDay();
-    console.log(`day:${day}`);
     //첫 월요일까지 남은 일수 (월요일=1)
     const daysToMonday = (1 - day + 7) % 7;
-    console.log(`days to Monday:${daysToMonday}`);
     //첫 월요일
     const firstMonday = new Date(
       today.getFullYear(),
