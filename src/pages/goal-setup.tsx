@@ -1,3 +1,10 @@
+import {
+  getCurrentMonth,
+  getMonthYear,
+  getWeekRange,
+  getWeeksInMonth,
+  getWeekStart,
+} from "@/utils/dateUtils";
 import { Task } from "@/types/task";
 import { useGoalStore } from "@/stores/useGoalStore";
 
@@ -13,47 +20,25 @@ type Week = {
 };
 
 export default function GoalSetup() {
+  const baseDate = new Date(); //or test date
   //router& store hooks
   const router = useRouter();
   const { addFinalGoal, addMonthlyGoals, addWeeklyGoals } = useGoalStore();
   //local state
   const [finalTitle, setFinalTitle] = useState<string>("");
   const [monthTitle, setMonthTitle] = useState<string>("");
-  const [weeks, setWeeks] = useState<Week[]>([
-    {
+  const [weeks, setWeeks] = useState<Week[]>(() => {
+    const weekCount = getWeeksInMonth(baseDate);
+    console.log(weekCount);
+    return Array.from({ length: weekCount }, (_, i) => ({
       tasks: [
-        { id: "w1-t1", text: "", completed: false },
-        { id: "w1-t2", text: "", completed: false },
-        { id: "w1-t3", text: "", completed: false },
+        { id: `w${i + 1}-t1`, text: "", completed: false },
+        { id: `w${i + 1}-t2`, text: "", completed: false },
+        { id: `w${i + 1}-t3`, text: "", completed: false },
       ],
-      isOpen: true,
-    },
-    {
-      tasks: [
-        { id: "w2-t1", text: "", completed: false },
-        { id: "w2-t2", text: "", completed: false },
-        { id: "w2-t3", text: "", completed: false },
-      ],
-      isOpen: false,
-    },
-    {
-      tasks: [
-        { id: "w3-t1", text: "", completed: false },
-        { id: "w3-t2", text: "", completed: false },
-        { id: "w3-t3", text: "", completed: false },
-      ],
-      isOpen: false,
-    },
-    {
-      tasks: [
-        { id: "w4-t1", text: "", completed: false },
-        { id: "w4-t2", text: "", completed: false },
-        { id: "w4-t3", text: "", completed: false },
-      ],
-      isOpen: false,
-    },
-  ]);
-
+      isOpen: i === 0, //open 1st week only
+    }));
+  });
   //event handlers
   const handleFinalTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFinalTitle(e.target.value);
@@ -80,30 +65,27 @@ export default function GoalSetup() {
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     //🔥 Zustand store 내부 state를 직접 초기화
     // useGoalStore.setState({
     //   monthlyGoals: [],
     //   weeklyGoals: [],
     //   currentMonthId: null,
     // });
-
     //🔥 localStorage의 persist 데이터 삭제
     // localStorage.removeItem("goal-storage");
-
     addFinalGoal({
       title: finalTitle,
       createdAt: new Date().toISOString(),
     });
     addMonthlyGoals({
-      id: getCurrentMonth(),
+      id: getCurrentMonth(baseDate),
       title: monthTitle,
     });
     const weeklyGoals = weeks.map((w, i) => ({
-      id: `${getCurrentMonth()}-w${i + 1}`,
-      monthId: getCurrentMonth(),
+      id: `${getCurrentMonth(baseDate)}-w${i + 1}`,
+      monthId: getCurrentMonth(baseDate),
       weekNumber: i + 1,
-      weekStart: getWeekStart(i),
+      weekStart: getWeekStart(baseDate, i),
       tasks: w.tasks.filter((t) => t.text.trim() !== ""),
       completed: false,
     }));
@@ -117,49 +99,6 @@ export default function GoalSetup() {
       )
     );
   };
-  //helper functions
-  function getCurrentMonth() {
-    return new Date().toISOString().slice(0, 7);
-  }
-  //start of a week = Monday
-  function getWeekStart(weekIndex: number) {
-    const today = new Date();
-    const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const day = firstOfMonth.getDay();
-    //첫 월요일까지 남은 일수 (월요일=1)
-    const daysToMonday = (1 - day + 7) % 7;
-    //첫 월요일
-    const firstMonday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1 + daysToMonday
-    );
-    //weekIndex번째 주
-    firstMonday.setDate(firstMonday.getDate() + weekIndex * 7);
-    return firstMonday.toLocaleDateString("sv-SE"); //내 컴퓨터(한국)/영국 시차로인한 오류 없애기 위함
-    //return firstMonday.toISOString().slice(0, 10);
-  }
-  function getMonthYear() {
-    const today = new Date();
-    const month = today.toLocaleString("en-GB", { month: "short" });
-    const year = today.getFullYear();
-    return `${month} ${year}`;
-  }
-  function getWeekRange(weekIndex: number) {
-    const weekStart = new Date(getWeekStart(weekIndex));
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekEnd.getDate() + 6);
-    const startDay = weekStart.getDate();
-    const endDay = weekEnd.getDate();
-    const startMonth = weekStart.toLocaleString("en-GB", { month: "short" });
-    const endMonth = weekEnd.toLocaleString("en-GB", { month: "short" });
-    if (startMonth === endMonth) {
-      return `${startDay}-${endDay} ${endMonth}`;
-    } else {
-      return `${startDay}${startMonth} - ${endDay}${endMonth}`;
-    }
-  }
-
   return (
     <div className="max-w-[800px] w-[90%] mx-auto">
       <div className="flex flex-col pt-15 pb-13 gap-5">
@@ -183,7 +122,9 @@ export default function GoalSetup() {
               />
             </div>
             <div className="flex flex-col border border-gray-200 rounded-lg px-10 py-3 gap-2">
-              <div className="text-xl font-bold py-1">{getMonthYear()}</div>
+              <div className="text-xl font-bold py-1">
+                {getMonthYear(baseDate)}
+              </div>
               <input
                 type="text"
                 placeholder="Please enter this month's goal"
@@ -202,7 +143,7 @@ export default function GoalSetup() {
                   >
                     <div className="flex justify-between text-xl font-bold py-2">
                       <span>
-                        Week{weekIdx + 1} ({getWeekRange(weekIdx)})
+                        Week{weekIdx + 1} ({getWeekRange(baseDate, weekIdx)})
                       </span>
                       <span>
                         <button
