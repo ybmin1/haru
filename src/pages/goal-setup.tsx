@@ -5,7 +5,7 @@ import {
   getWeeksInMonth,
   getWeekStart,
 } from "@/utils/dateUtils";
-import { Task } from "@/types/task";
+import { Task } from "@/types/goal";
 import { useGoalStore } from "@/stores/useGoalStore";
 
 import { useRouter } from "next/router";
@@ -29,7 +29,6 @@ export default function GoalSetup() {
   const [monthTitle, setMonthTitle] = useState<string>("");
   const [weeks, setWeeks] = useState<Week[]>(() => {
     const weekCount = getWeeksInMonth(baseDate);
-    console.log(weekCount);
     return Array.from({ length: weekCount }, (_, i) => ({
       tasks: [
         { id: `w${i + 1}-t1`, text: "", completed: false },
