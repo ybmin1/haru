@@ -1,29 +1,10 @@
-import { Task } from "@/types/task";
+import { FinalGoal, MonthlyGoal, WeeklyGoal } from "@/types/goal";
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-type FinalGoal = {
-  title: string;
-  createdAt: string;
-};
-
-type MonthlyGoal = {
-  id: string;
-  title: string;
-};
-
-type WeeklyGoal = {
-  id: string;
-  monthId: string;
-  weekNumber: number;
-  weekStart: string;
-  tasks: Task[];
-  completed: boolean;
-};
-
 type GoalStore = {
-  finalGoal: FinalGoal;
+  finalGoal: FinalGoal | null;
   monthlyGoals: MonthlyGoal[];
   weeklyGoals: WeeklyGoal[];
   currentMonthId: string | null;
@@ -33,18 +14,22 @@ type GoalStore = {
   updateMonthlyGoals: (id: string, updates: Partial<MonthlyGoal>) => void;
   addWeeklyGoals: (weeks: WeeklyGoal[]) => void;
   updateWeeklyGoals: (id: string, updates: Partial<WeeklyGoal>) => void;
+  toggleWeeklyTask: (weekId: string, taskIdx: number) => void;
 };
 
 export const useGoalStore = create<GoalStore>()(
   persist(
     (set) => ({
-      finalGoal: {} as FinalGoal,
+      finalGoal: null,
       monthlyGoals: [] as MonthlyGoal[],
       weeklyGoals: [] as WeeklyGoal[],
       currentMonthId: null,
       addFinalGoal: (finalGoal) => set(() => ({ finalGoal: finalGoal })),
       updateFinalGoal: (updates) =>
-        set((state) => ({ finalGoal: { ...state.finalGoal, ...updates } })),
+        set((state) => {
+          if (!state.finalGoal) return state;
+          return { finalGoal: { ...state.finalGoal, ...updates } };
+        }),
       addMonthlyGoals: (goal) =>
         set((state) => ({ monthlyGoals: [...state.monthlyGoals, goal] })),
       updateMonthlyGoals: (id, updates) =>
@@ -59,6 +44,19 @@ export const useGoalStore = create<GoalStore>()(
         set((state) => ({
           weeklyGoals: state.weeklyGoals.map((w) =>
             w.id === id ? { ...w, ...updates } : w
+          ),
+        })),
+      toggleWeeklyTask: (weekId, taskIdx) =>
+        set((state) => ({
+          weeklyGoals: state.weeklyGoals.map((w) =>
+            w.id === weekId
+              ? {
+                  ...w,
+                  tasks: w.tasks.map((t, idx) =>
+                    idx === taskIdx ? { ...t, completed: !t.completed } : t
+                  ),
+                }
+              : w
           ),
         })),
     }),

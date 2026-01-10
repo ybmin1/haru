@@ -22,6 +22,16 @@ export function getMonthYear(date: Date) {
   const year = date.getFullYear();
   return `${month} ${year}`;
 }
+export function getWeekIndex(date: Date) {
+  const daysToMonday = (1 - date.getDay() - 7) % 7; //to this week's Monday
+  const mondayOfWeek = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() + daysToMonday
+  );
+  const weekIndex = Math.ceil(mondayOfWeek.getDate() / 7);
+  return weekIndex;
+}
 export function getWeekRange(date: Date, weekIndex: number) {
   const weekStart = new Date(getWeekStart(date, weekIndex));
   const weekEnd = new Date(weekStart);
