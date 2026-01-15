@@ -1,7 +1,8 @@
+import { demoWeeklyGoals } from "@/data/demoGoals";
 import { useGoalStore } from "@/stores/useGoalStore";
 
 export default function Calendar() {
-  const { weeklyGoals } = useGoalStore();
+  const { isDemo, weeklyGoals } = useGoalStore();
 
   const getWeeksData = () => {
     const weeksData = [];
@@ -14,8 +15,8 @@ export default function Calendar() {
       const daysToMonday = -(weekStart.getDay() - 1 + 7) % 7;
       weekStart.setDate(weekStart.getDate() + daysToMonday);
       const weekStartStr = weekStart.toLocaleDateString("sv-SE");
-      //해당 weekStart에 해당하는 weeklyGoal찾기
-      const matchingGoal = weeklyGoals.find(
+      //해당 weekStart에 해당하는 weeklyGoal찾기 (demo일 경우에는 demo데이터에서 찾는다)
+      const matchingGoal = (isDemo ? demoWeeklyGoals : weeklyGoals).find(
         (goal) => goal.weekStart === weekStartStr
       );
       let status: "full" | "partial" | "none" | "empty";

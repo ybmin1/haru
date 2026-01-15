@@ -8,6 +8,7 @@ type GoalStore = {
   monthlyGoals: MonthlyGoal[];
   weeklyGoals: WeeklyGoal[];
   currentMonthId: string | null;
+  isDemo: boolean;
   addFinalGoal: (goal: FinalGoal) => void;
   updateFinalGoal: (update: Partial<FinalGoal>) => void;
   addMonthlyGoals: (goal: MonthlyGoal) => void;
@@ -15,6 +16,7 @@ type GoalStore = {
   addWeeklyGoals: (weeks: WeeklyGoal[]) => void;
   updateWeeklyGoals: (id: string, updates: Partial<WeeklyGoal>) => void;
   toggleWeeklyTask: (weekId: string, taskIdx: number) => void;
+  toggleDemoData: () => void;
 };
 
 export const useGoalStore = create<GoalStore>()(
@@ -24,6 +26,7 @@ export const useGoalStore = create<GoalStore>()(
       monthlyGoals: [] as MonthlyGoal[],
       weeklyGoals: [] as WeeklyGoal[],
       currentMonthId: null,
+      isDemo: true,
       addFinalGoal: (finalGoal) => set(() => ({ finalGoal: finalGoal })),
       updateFinalGoal: (updates) =>
         set((state) => {
@@ -59,6 +62,7 @@ export const useGoalStore = create<GoalStore>()(
               : w
           ),
         })),
+      toggleDemoData: () => set((state) => ({ isDemo: !state.isDemo })),
     }),
     { name: "goal-storage", storage: createJSONStorage(() => localStorage) }
   )

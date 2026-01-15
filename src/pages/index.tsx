@@ -1,4 +1,9 @@
 import Calendar from "@/components/Calendar";
+import {
+  demoFinalGoal,
+  demoMonthlyGoals,
+  demoWeeklyGoals,
+} from "@/data/demoGoals";
 import { getCurrentMonth, getWeekIndex } from "@/utils/dateUtils";
 import { MonthlyGoal, WeeklyGoal } from "@/types/goal";
 import { useGoalStore } from "@/stores/useGoalStore";
@@ -11,22 +16,27 @@ import { LuSettings } from "react-icons/lu";
 export default function Home() {
   const baseDate = new Date();
 
-  const { finalGoal, monthlyGoals, toggleWeeklyTask, weeklyGoals } =
+  const { isDemo, finalGoal, monthlyGoals, toggleWeeklyTask, weeklyGoals } =
     useGoalStore();
 
   const monthId = getCurrentMonth(baseDate);
   const weekId = `${getCurrentMonth(baseDate)}-w${getWeekIndex(baseDate)}`;
-  const monthlyGoal: MonthlyGoal | null =
-    monthlyGoals.find((goal) => goal.id === monthId) || null;
-  const weeklyGoal: WeeklyGoal | null =
-    weeklyGoals.find((goal) => goal.id === weekId) || null;
+  const finalGoalData = isDemo ? demoFinalGoal : finalGoal;
+  const monthlyGoalData: MonthlyGoal | null =
+    (isDemo ? demoMonthlyGoals : monthlyGoals).find(
+      (goal) => goal.id === monthId
+    ) || null;
+  const weeklyGoalData: WeeklyGoal | null =
+    (isDemo ? demoWeeklyGoals : weeklyGoals).find(
+      (goal) => goal.id === weekId
+    ) || null;
 
   const handleCheckbox = (wId: string, taskIdx: number) => {
     toggleWeeklyTask(wId, taskIdx);
   };
 
   return (
-    <div className="w-full px-20 py-12">
+    <div className="w-full px-20 py-7">
       <div className="px-8">
         <div className="flex justify-end rounded-lg border border-gray-200 bg-gray-100 p-2">
           <div className="p-2">
@@ -36,11 +46,15 @@ export default function Home() {
             <div className="flex items-center justify-between h-[47px] border-b border-gray-200 px-6">
               <div className="flex items-center gap-2">
                 <GoGoal className="font-bold" />
-                {finalGoal
-                  ? `Final Goal: ${finalGoal.title}`
+                {finalGoalData
+                  ? `Final Goal: ${finalGoalData.title}`
                   : "Set your Final Goal !! "}
               </div>
-              <Link href={"/goal-setup"}>
+              <Link
+                href={"/goal-setup"}
+                className="flex items-center justify-center gap-2"
+              >
+                <span>Set up goals</span>
                 <LuSettings />
               </Link>
             </div>
@@ -49,16 +63,16 @@ export default function Home() {
                 <div className="w-full h-[184px] rounded-xl border border-gray-200 bg-gradient-to-b from-white to-gray-100  p-6">
                   <div className="text-gray-400">This Month Goal</div>
                   <div className="flex flex-col justify-center h-full list-disc pb-6 gap-1">
-                    {monthlyGoal
-                      ? monthlyGoal.title
+                    {monthlyGoalData
+                      ? monthlyGoalData.title
                       : "Please add this month goal"}
                   </div>
                 </div>
                 <div className="w-full h-[184px] rounded-xl border border-gray-200 bg-gradient-to-b from-white to-gray-100 p-6">
                   <div className="text-gray-400">Tasks</div>
                   <div className="flex flex-col justify-center h-full list-disc pb-6 gap-1">
-                    {weeklyGoal ? (
-                      weeklyGoal.tasks.map((task, taskIdx) => (
+                    {weeklyGoalData ? (
+                      weeklyGoalData.tasks.map((task, taskIdx) => (
                         <label key={taskIdx}>
                           <input
                             type="checkbox"
