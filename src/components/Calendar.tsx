@@ -17,14 +17,14 @@ export default function Calendar() {
       const weekStartStr = weekStart.toLocaleDateString("sv-SE");
       //해당 weekStart에 해당하는 weeklyGoal찾기 (demo일 경우에는 demo데이터에서 찾는다)
       const matchingGoal = (isDemo ? demoWeeklyGoals : weeklyGoals).find(
-        (goal) => goal.weekStart === weekStartStr
+        (goal) => goal.weekStart === weekStartStr,
       );
       let status: "full" | "partial" | "none" | "empty";
       if (!matchingGoal || matchingGoal.tasks.length === 0) {
         status = "empty";
       } else {
         const completedCount = matchingGoal.tasks.filter(
-          (task) => task.completed
+          (task) => task.completed,
         ).length;
         const totalCount = matchingGoal.tasks.length;
         if (completedCount === totalCount) {
@@ -66,7 +66,7 @@ export default function Calendar() {
   };
 
   return (
-    <div className="h-[300px] border border-gray-200 rounded-2xl mt-6 p-6 flex flex-col">
+    <div className="h-[300px] border border-gray-200 rounded-2xl mx-6 mb-6 p-6 flex flex-col">
       <div className="flex flex-col h-full">
         <div className="text-gray-400 mb-5">Calendar</div>
         {/* Weekly Blocks */}
@@ -75,7 +75,7 @@ export default function Calendar() {
             <span
               key={i}
               className={`border border-gray-200 rounded-sm flex-1 h-25 mb-2 ${getColourClass(
-                week.status
+                week.status,
               )}`}
             ></span>
           ))}
@@ -99,17 +99,17 @@ export default function Calendar() {
           <span className="text-xs text-gray-600">Less</span>
           <div
             className={`border border-gray-200 rounded-sm w-4 h-4 ${getColourClass(
-              "none"
+              "none",
             )}`}
           ></div>
           <div
             className={`border border-gray-200 rounded-sm w-4 h-4 ${getColourClass(
-              "partial"
+              "partial",
             )}`}
           ></div>
           <div
             className={`border border-gray-200 rounded-sm w-4 h-4 ${getColourClass(
-              "full"
+              "full",
             )}`}
           ></div>
           <span className="text-xs text-gray-600">More</span>

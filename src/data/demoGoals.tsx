@@ -1,6 +1,6 @@
 export const demoFinalGoal = {
   createdAt: "2026-01-06T22:53:15.501Z",
-  title: "Become a Software Developer",
+  title: "Become a Software Developer until 2026 and get",
 };
 
 export const demoMonthlyGoals = [
