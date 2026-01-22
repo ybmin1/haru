@@ -1,0 +1,46 @@
+import { demoFinalGoal } from "@/data/demoGoals";
+import { EmptyFinalGoal, FinalGoal } from "@/types/goal";
+import { useGoalStore } from "@/stores/useGoalStore";
+
+import Link from "next/link";
+
+import { HiOutlineHome } from "react-icons/hi";
+import { LuSettings } from "react-icons/lu";
+
+export default function Sidebar() {
+  const { finalGoal, isDemo } = useGoalStore();
+
+  const finalGoalData: FinalGoal | EmptyFinalGoal = isDemo
+    ? demoFinalGoal
+    : finalGoal
+      ? finalGoal
+      : { title: "Set your final goal" };
+
+  return (
+    <div className="p-2">
+      <div className="flex flex-col w-[272px] shrink-0 bg-gray-100 m-2">
+        <div className="flex flex-col gap-1 mb-5">
+          <Link href={"/"} className="flex items-center gap-1">
+            <span className="text-gray-400">
+              <HiOutlineHome />
+            </span>
+            <span>Home</span>
+          </Link>
+          <Link href={"/goal-setup"} className="flex items-center gap-1">
+            <span className="text-gray-400">
+              <LuSettings />
+            </span>
+            <span>Set Up Goals</span>
+          </Link>
+        </div>
+        <div>
+          <div className="text-gray-400 mb-1">Goals</div>
+          <div className="w-[280px] truncate">
+            <span>Goal 1.</span>
+            <span>{finalGoalData.title}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

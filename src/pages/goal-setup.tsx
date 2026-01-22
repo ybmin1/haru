@@ -47,7 +47,7 @@ export default function GoalSetup() {
   const handleTaskChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     weekIdx: number,
-    taskIdx: number
+    taskIdx: number,
   ) => {
     setWeeks((prev) =>
       prev.map((w, wIdx) =>
@@ -55,11 +55,11 @@ export default function GoalSetup() {
           ? {
               ...w,
               tasks: w.tasks.map((t, tIdx) =>
-                tIdx === taskIdx ? { ...t, text: e.target.value } : t
+                tIdx === taskIdx ? { ...t, text: e.target.value } : t,
               ),
             }
-          : w
-      )
+          : w,
+      ),
     );
   };
   const handleSubmit = (e: React.FormEvent) => {
@@ -94,13 +94,13 @@ export default function GoalSetup() {
   const handleToggle = (weekIdx: number) => {
     setWeeks((prev) =>
       prev.map((week, i) =>
-        i === weekIdx ? { ...week, isOpen: !week.isOpen } : week
-      )
+        i === weekIdx ? { ...week, isOpen: !week.isOpen } : week,
+      ),
     );
   };
   return (
-    <div className="max-w-[800px] w-[90%] mx-auto">
-      <div className="flex flex-col pt-15 pb-13 gap-5">
+    <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
+      <div className="flex flex-col pb-6 gap-5">
         <div className="text-3xl font-bold">Set Up Goals</div>
         <div className="text-gray-500">
           Set up goals for this month and break down to weekly tasks
