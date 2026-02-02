@@ -4,7 +4,7 @@ import {
   demoMonthlyGoals,
   demoWeeklyGoals,
 } from "@/data/demoGoals";
-import { getCurrentMonth, getWeekIndex } from "@/utils/dateUtils";
+import { monthId, weekId } from "@/utils/dateUtils";
 import {
   EmptyFinalGoal,
   EmptyMonthlyGoal,
@@ -17,13 +17,9 @@ import { useGoalStore } from "@/stores/useGoalStore";
 import { GoGoal } from "react-icons/go";
 
 export default function Home() {
-  const baseDate = new Date();
-
   const { isDemo, finalGoal, monthlyGoals, toggleWeeklyTask, weeklyGoals } =
     useGoalStore();
 
-  const monthId = getCurrentMonth(baseDate);
-  const weekId = `${getCurrentMonth(baseDate)}-w${getWeekIndex(baseDate)}`;
   const finalGoalData: FinalGoal | EmptyFinalGoal = isDemo
     ? demoFinalGoal
     : (finalGoal ?? { title: "Set your final Goal!" });

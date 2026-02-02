@@ -12,9 +12,7 @@ export default function Sidebar() {
 
   const finalGoalData: FinalGoal | EmptyFinalGoal = isDemo
     ? demoFinalGoal
-    : finalGoal
-      ? finalGoal
-      : { title: "Set your final goal" };
+    : (finalGoal ?? { title: "Set your final goal" });
 
   return (
     <div className="p-2">

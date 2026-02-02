@@ -1,33 +1,100 @@
 import {
+  baseDate,
   getCurrentMonth,
   getMonthYear,
   getWeekRange,
   getWeeksInMonth,
   getWeekStart,
+  monthId,
 } from "@/utils/dateUtils";
-import { Task } from "@/types/goal";
+import {
+  demoFinalGoal,
+  demoMonthlyGoals,
+  demoWeeklyGoals,
+} from "@/data/demoGoals";
+import { Task, WeeklyGoal } from "@/types/goal";
 import { useGoalStore } from "@/stores/useGoalStore";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 import { GoChevronDown } from "react-icons/go";
 import { GoChevronUp } from "react-icons/go";
 
-type Week = {
+type WeeklyGoalDraft = Partial<WeeklyGoal> & {
   tasks: Task[];
   isOpen: boolean;
 };
 
 export default function GoalSetup() {
-  const baseDate = new Date(); //or test date
   //router& store hooks
   const router = useRouter();
-  const { addFinalGoal, addMonthlyGoals, addWeeklyGoals } = useGoalStore();
+  const {
+    addFinalGoal,
+    addMonthlyGoals,
+    addWeeklyGoals,
+    isDemo,
+    finalGoal,
+    monthlyGoals,
+    toggleDemoData,
+    updateFinalGoal,
+    updateMonthlyGoals,
+    updateWeeklyGoals,
+    weeklyGoals,
+  } = useGoalStore();
+
+  //Check if current month's data exists
+  const currentMonthGoal = isDemo
+    ? demoMonthlyGoals.find((goal) => goal.id === monthId)
+    : monthlyGoals.find((goal) => goal.id === monthId);
+  const currentWeeklyGoals = isDemo
+    ? demoWeeklyGoals.filter((week) => week.monthId === monthId)
+    : weeklyGoals.filter((week) => week.monthId === monthId);
+  const isEditMode = currentWeeklyGoals.length > 0;
+
   //local state
-  const [finalTitle, setFinalTitle] = useState<string>("");
-  const [monthTitle, setMonthTitle] = useState<string>("");
-  const [weeks, setWeeks] = useState<Week[]>(() => {
+  const [finalTitle, setFinalTitle] = useState<string>(
+    isDemo ? demoFinalGoal.title : (finalGoal?.title ?? ""),
+  );
+  const [monthTitle, setMonthTitle] = useState<string>(
+    (isDemo ? demoMonthlyGoals : monthlyGoals).find(
+      (goal) => goal.id === monthId,
+    )?.title ?? "",
+  );
+  const [weeks, setWeeks] = useState<WeeklyGoalDraft[]>(() => {
+    const currentMonthWeeks = (isDemo ? demoWeeklyGoals : weeklyGoals).filter(
+      (week) => week.monthId === monthId,
+    );
+    if (currentMonthWeeks.length > 0) {
+      return currentMonthWeeks.map((w, i) => ({ ...w, isOpen: i === 0 }));
+    }
+    return getNewWeeks();
+  });
+
+  useEffect(
+    () =>
+      setFinalTitle(isDemo ? demoFinalGoal.title : (finalGoal?.title ?? "")),
+    [isDemo, finalGoal],
+  );
+  useEffect(
+    () =>
+      setMonthTitle(
+        (isDemo ? demoMonthlyGoals : monthlyGoals).find(
+          (goal) => goal.id === monthId,
+        )?.title ?? "",
+      ),
+    [isDemo, monthlyGoals],
+  );
+  useEffect(() => {
+    const currentMonthWeeks = (isDemo ? demoWeeklyGoals : weeklyGoals).filter(
+      (week) => week.monthId === monthId,
+    );
+    if (currentMonthWeeks.length > 0) {
+      setWeeks(currentMonthWeeks.map((w, i) => ({ ...w, isOpen: i === 0 })));
+    } else setWeeks(getNewWeeks());
+  }, [isDemo, weeklyGoals]);
+
+  function getNewWeeks() {
     const weekCount = getWeeksInMonth(baseDate);
     return Array.from({ length: weekCount }, (_, i) => ({
       tasks: [
@@ -37,7 +104,8 @@ export default function GoalSetup() {
       ],
       isOpen: i === 0, //open 1st week only
     }));
-  });
+  }
+
   //event handlers
   const handleFinalTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFinalTitle(e.target.value);
@@ -66,20 +134,42 @@ export default function GoalSetup() {
     e.preventDefault();
     //🔥 Zustand store 내부 state를 직접 초기화
     // useGoalStore.setState({
+    //   finalGoal: null,
     //   monthlyGoals: [],
     //   weeklyGoals: [],
     //   currentMonthId: null,
     // });
     //🔥 localStorage의 persist 데이터 삭제
     // localStorage.removeItem("goal-storage");
-    addFinalGoal({
-      title: finalTitle,
-      createdAt: new Date().toISOString(),
-    });
-    addMonthlyGoals({
-      id: getCurrentMonth(baseDate),
-      title: monthTitle,
-    });
+
+    //if Demo mode, do not save and ask to switch
+    if (isDemo) {
+      const shouldSwitch = window.confirm(
+        "You can't save change in demo mode.\nSwitch to user mode to add or update your own goals?",
+      );
+      if (shouldSwitch) {
+        toggleDemoData();
+      }
+      return;
+    }
+
+    //user mode
+    if (finalGoal) {
+      updateFinalGoal({ title: finalTitle });
+    } else {
+      addFinalGoal({
+        title: finalTitle,
+        createdAt: new Date().toISOString(),
+      });
+    }
+    if (isEditMode && currentMonthGoal) {
+      updateMonthlyGoals(monthId, { title: monthTitle });
+    } else {
+      addMonthlyGoals({
+        id: getCurrentMonth(baseDate),
+        title: monthTitle,
+      });
+    }
     const weeklyGoals = weeks.map((w, i) => ({
       id: `${getCurrentMonth(baseDate)}-w${i + 1}`,
       monthId: getCurrentMonth(baseDate),
@@ -88,7 +178,14 @@ export default function GoalSetup() {
       tasks: w.tasks.filter((t) => t.text.trim() !== ""),
       completed: false,
     }));
-    addWeeklyGoals(weeklyGoals);
+    if (isEditMode) {
+      weeklyGoals.forEach((weekGoal) => {
+        updateWeeklyGoals(weekGoal.id, weekGoal);
+      });
+    } else {
+      addWeeklyGoals(weeklyGoals);
+    }
+    window.alert("Goals saved successfully!");
     router.push("/");
   };
   const handleToggle = (weekIdx: number) => {
@@ -98,6 +195,7 @@ export default function GoalSetup() {
       ),
     );
   };
+
   return (
     <div className="w-full rounded-lg border border-gray-200 bg-white p-6">
       <div className="flex flex-col pb-6 gap-5">
@@ -147,6 +245,7 @@ export default function GoalSetup() {
                       <span>
                         <button
                           onClick={() => handleToggle(weekIdx)}
+                          type="button"
                           className="hover:cursor-pointer"
                         >
                           {week.isOpen ? <GoChevronUp /> : <GoChevronDown />}
@@ -183,7 +282,7 @@ export default function GoalSetup() {
               type="submit"
               className="bg-black text-white rounded-lg px-4 py-1 mt-5 hover:cursor-pointer hover:bg-gray-700 transition-all duration-300"
             >
-              Submit
+              {isEditMode ? "Update Goals" : "Add Goals"}
             </button>
           </div>
         </form>
