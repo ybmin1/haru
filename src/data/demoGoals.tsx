@@ -1,6 +1,6 @@
 export const demoFinalGoal = {
   createdAt: "2026-01-06T22:53:15.501Z",
-  title: "Become a Software Developer until 2026 and get",
+  title: "Demo:Become a Software Developer until 2026 and get",
 };
 
 export const demoMonthlyGoals = [
@@ -65,10 +65,10 @@ export const demoWeeklyGoals = [
     id: "2026-01-w1",
     monthId: "2026-01",
     tasks: [
-      { id: "w1-t1", text: "auto week calculation", completed: true },
+      { id: "w1-t1", text: "demo:auto week calculation", completed: true },
       {
         id: "w1-t2",
-        text: "update index page to show current week",
+        text: "demo:update index page to show current week",
         completed: true,
       },
     ],

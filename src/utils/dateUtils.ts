@@ -1,3 +1,9 @@
+export const baseDate = new Date(); //or test date
+
+export const monthId = getCurrentMonth(baseDate);
+
+export const weekId = `${getCurrentMonth(baseDate)}-w${getWeekIndex(baseDate)}`;
+
 export function getCurrentMonth(date: Date) {
   return date.toISOString().slice(0, 7);
 }
@@ -8,7 +14,7 @@ export function getFirstMonday(date: Date) {
   const firstMonday = new Date(
     date.getFullYear(),
     date.getMonth(),
-    1 + daysToMonday
+    1 + daysToMonday,
   );
   return firstMonday;
 }
@@ -27,7 +33,7 @@ export function getWeekIndex(date: Date) {
   const mondayOfWeek = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate() + daysToMonday
+    date.getDate() + daysToMonday,
   );
   const weekIndex = Math.ceil(mondayOfWeek.getDate() / 7);
   return weekIndex;
@@ -49,7 +55,7 @@ export function getWeekRange(date: Date, weekIndex: number) {
 //calculate the number of weeks in the month (a week starts with Monday)
 export function getWeeksInMonth(date: Date) {
   const weeks = Math.ceil(
-    (getLastDate(date).getDate() - getFirstMonday(date).getDate() + 1) / 7
+    (getLastDate(date).getDate() - getFirstMonday(date).getDate() + 1) / 7,
   );
   return Math.max(4, weeks); //minimum 4 weeks
 }
