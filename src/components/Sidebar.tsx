@@ -1,6 +1,5 @@
-import { demoFinalGoal } from "@/data/demoGoals";
 import { EmptyFinalGoal, FinalGoal } from "@/types/goal";
-import { useGoalStore } from "@/stores/useGoalStore";
+import { useGoalSource } from "@/stores/useGoalStore";
 
 import Link from "next/link";
 
@@ -8,11 +7,11 @@ import { HiOutlineHome } from "react-icons/hi";
 import { LuSettings } from "react-icons/lu";
 
 export default function Sidebar() {
-  const { finalGoal, isDemo } = useGoalStore();
+  const { finalGoal } = useGoalSource();
 
-  const finalGoalData: FinalGoal | EmptyFinalGoal = isDemo
-    ? demoFinalGoal
-    : (finalGoal ?? { title: "Set your final goal" });
+  const finalGoalData: FinalGoal | EmptyFinalGoal = finalGoal ?? {
+    title: "Set your final goal",
+  };
 
   return (
     <div className="p-2">

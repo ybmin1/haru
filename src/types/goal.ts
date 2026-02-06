@@ -30,3 +30,9 @@ export type Task = {
   text: string;
   completed: boolean;
 };
+
+export type GoalSourceData = {
+  finalGoal: FinalGoal | null;
+  monthlyGoals: MonthlyGoal[];
+  weeklyGoals: WeeklyGoal[];
+};

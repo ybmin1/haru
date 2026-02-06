@@ -1,9 +1,4 @@
 import Calendar from "@/components/Calendar";
-import {
-  demoFinalGoal,
-  demoMonthlyGoals,
-  demoWeeklyGoals,
-} from "@/data/demoGoals";
 import { monthId, weekId } from "@/utils/dateUtils";
 import {
   EmptyFinalGoal,
@@ -12,27 +7,24 @@ import {
   MonthlyGoal,
   WeeklyGoal,
 } from "@/types/goal";
-import { useGoalStore } from "@/stores/useGoalStore";
+import { useGoalSource, useGoalStore } from "@/stores/useGoalStore";
 
 import { GoGoal } from "react-icons/go";
 
 export default function Home() {
-  const { isDemo, finalGoal, monthlyGoals, toggleWeeklyTask, weeklyGoals } =
-    useGoalStore();
+  const { toggleWeeklyTask } = useGoalStore();
+  const { finalGoal, monthlyGoals, weeklyGoals } = useGoalSource();
 
-  const finalGoalData: FinalGoal | EmptyFinalGoal = isDemo
-    ? demoFinalGoal
-    : (finalGoal ?? { title: "Set your final Goal!" });
-  const monthlyGoalData: MonthlyGoal | EmptyMonthlyGoal = (isDemo
-    ? demoMonthlyGoals
-    : monthlyGoals
-  ).find((goal) => goal.id === monthId) ?? {
+  const finalGoalData: FinalGoal | EmptyFinalGoal = finalGoal ?? {
+    title: "Set your final Goal!",
+  };
+  const monthlyGoalData: MonthlyGoal | EmptyMonthlyGoal = monthlyGoals.find(
+    (goal) => goal.id === monthId,
+  ) ?? {
     title: "Please add this month goal",
   };
   const weeklyGoalData: WeeklyGoal | null =
-    (isDemo ? demoWeeklyGoals : weeklyGoals).find(
-      (goal) => goal.id === weekId,
-    ) || null;
+    weeklyGoals.find((goal) => goal.id === weekId) || null;
 
   const handleCheckbox = (wId: string, taskIdx: number) => {
     toggleWeeklyTask(wId, taskIdx);

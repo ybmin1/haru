@@ -7,13 +7,8 @@ import {
   getWeekStart,
   monthId,
 } from "@/utils/dateUtils";
-import {
-  demoFinalGoal,
-  demoMonthlyGoals,
-  demoWeeklyGoals,
-} from "@/data/demoGoals";
 import { Task, WeeklyGoal } from "@/types/goal";
-import { useGoalStore } from "@/stores/useGoalStore";
+import { useGoalSource, useGoalStore } from "@/stores/useGoalStore";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -34,35 +29,27 @@ export default function GoalSetup() {
     addMonthlyGoals,
     addWeeklyGoals,
     isDemo,
-    finalGoal,
-    monthlyGoals,
     toggleDemoData,
     updateFinalGoal,
     updateMonthlyGoals,
     updateWeeklyGoals,
-    weeklyGoals,
   } = useGoalStore();
+  const { finalGoal, monthlyGoals, weeklyGoals } = useGoalSource();
 
   //Check if current month's data exists
-  const currentMonthGoal = isDemo
-    ? demoMonthlyGoals.find((goal) => goal.id === monthId)
-    : monthlyGoals.find((goal) => goal.id === monthId);
-  const currentWeeklyGoals = isDemo
-    ? demoWeeklyGoals.filter((week) => week.monthId === monthId)
-    : weeklyGoals.filter((week) => week.monthId === monthId);
+  const currentMonthGoal = monthlyGoals.find((goal) => goal.id === monthId);
+  const currentWeeklyGoals = weeklyGoals.filter(
+    (week) => week.monthId === monthId,
+  );
   const isEditMode = currentWeeklyGoals.length > 0;
 
   //local state
-  const [finalTitle, setFinalTitle] = useState<string>(
-    isDemo ? demoFinalGoal.title : (finalGoal?.title ?? ""),
-  );
+  const [finalTitle, setFinalTitle] = useState<string>(finalGoal?.title ?? "");
   const [monthTitle, setMonthTitle] = useState<string>(
-    (isDemo ? demoMonthlyGoals : monthlyGoals).find(
-      (goal) => goal.id === monthId,
-    )?.title ?? "",
+    monthlyGoals.find((goal) => goal.id === monthId)?.title ?? "",
   );
   const [weeks, setWeeks] = useState<WeeklyGoalDraft[]>(() => {
-    const currentMonthWeeks = (isDemo ? demoWeeklyGoals : weeklyGoals).filter(
+    const currentMonthWeeks = weeklyGoals.filter(
       (week) => week.monthId === monthId,
     );
     if (currentMonthWeeks.length > 0) {
@@ -71,28 +58,22 @@ export default function GoalSetup() {
     return getNewWeeks();
   });
 
-  useEffect(
-    () =>
-      setFinalTitle(isDemo ? demoFinalGoal.title : (finalGoal?.title ?? "")),
-    [isDemo, finalGoal],
-  );
+  useEffect(() => setFinalTitle(finalGoal?.title ?? ""), [finalGoal]);
   useEffect(
     () =>
       setMonthTitle(
-        (isDemo ? demoMonthlyGoals : monthlyGoals).find(
-          (goal) => goal.id === monthId,
-        )?.title ?? "",
+        monthlyGoals.find((goal) => goal.id === monthId)?.title ?? "",
       ),
-    [isDemo, monthlyGoals],
+    [monthlyGoals],
   );
   useEffect(() => {
-    const currentMonthWeeks = (isDemo ? demoWeeklyGoals : weeklyGoals).filter(
+    const currentMonthWeeks = weeklyGoals.filter(
       (week) => week.monthId === monthId,
     );
     if (currentMonthWeeks.length > 0) {
       setWeeks(currentMonthWeeks.map((w, i) => ({ ...w, isOpen: i === 0 })));
     } else setWeeks(getNewWeeks());
-  }, [isDemo, weeklyGoals]);
+  }, [weeklyGoals]);
 
   function getNewWeeks() {
     const weekCount = getWeeksInMonth(baseDate);
