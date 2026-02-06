@@ -1,7 +1,18 @@
-import { FinalGoal, MonthlyGoal, WeeklyGoal } from "@/types/goal";
+import {
+  FinalGoal,
+  MonthlyGoal,
+  WeeklyGoal,
+  GoalSourceData,
+} from "@/types/goal";
+import {
+  demoFinalGoal,
+  demoMonthlyGoals,
+  demoWeeklyGoals,
+} from "@/data/demoGoals";
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { useShallow } from "zustand/shallow";
 
 type GoalStore = {
   finalGoal: FinalGoal | null;
@@ -38,7 +49,7 @@ export const useGoalStore = create<GoalStore>()(
       updateMonthlyGoals: (id, updates) =>
         set((state) => ({
           monthlyGoals: state.monthlyGoals.map((goal) =>
-            goal.id === id ? { ...goal, ...updates } : goal
+            goal.id === id ? { ...goal, ...updates } : goal,
           ),
         })),
       addWeeklyGoals: (weeks) =>
@@ -46,7 +57,7 @@ export const useGoalStore = create<GoalStore>()(
       updateWeeklyGoals: (id, updates) =>
         set((state) => ({
           weeklyGoals: state.weeklyGoals.map((w) =>
-            w.id === id ? { ...w, ...updates } : w
+            w.id === id ? { ...w, ...updates } : w,
           ),
         })),
       toggleWeeklyTask: (weekId, taskIdx) =>
@@ -56,14 +67,31 @@ export const useGoalStore = create<GoalStore>()(
               ? {
                   ...w,
                   tasks: w.tasks.map((t, idx) =>
-                    idx === taskIdx ? { ...t, completed: !t.completed } : t
+                    idx === taskIdx ? { ...t, completed: !t.completed } : t,
                   ),
                 }
-              : w
+              : w,
           ),
         })),
       toggleDemoData: () => set((state) => ({ isDemo: !state.isDemo })),
     }),
-    { name: "goal-storage", storage: createJSONStorage(() => localStorage) }
-  )
+    { name: "goal-storage", storage: createJSONStorage(() => localStorage) },
+  ),
 );
+
+export const useGoalSource = (): GoalSourceData =>
+  useGoalStore(
+    useShallow((state) =>
+      state.isDemo
+        ? {
+            finalGoal: demoFinalGoal,
+            monthlyGoals: demoMonthlyGoals,
+            weeklyGoals: demoWeeklyGoals,
+          }
+        : {
+            finalGoal: state.finalGoal,
+            monthlyGoals: state.monthlyGoals,
+            weeklyGoals: state.weeklyGoals,
+          },
+    ),
+  );
