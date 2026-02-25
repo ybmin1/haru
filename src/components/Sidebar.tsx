@@ -14,9 +14,9 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="p-2">
-      <div className="flex flex-col w-[272px] shrink-0 bg-gray-100 m-2">
-        <div className="flex flex-col gap-1 mb-5">
+    <div className="w-full h-full">
+      <div className="p-2">
+        <div className="flex flex-col gap-1 my-5">
           <Link href={"/"} className="flex items-center gap-1">
             <span className="text-gray-400">
               <HiOutlineHome />
@@ -32,7 +32,7 @@ export default function Sidebar() {
         </div>
         <div>
           <div className="text-gray-400 mb-1">Goals</div>
-          <div className="w-[280px] truncate">
+          <div className="w-full truncate">
             <span>Goal 1.</span>
             <span>{finalGoalData.title}</span>
           </div>
