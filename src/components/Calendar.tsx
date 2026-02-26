@@ -69,7 +69,7 @@ export default function Calendar() {
       <div className="flex flex-col h-full">
         <div className="text-gray-400 mb-5">Calendar</div>
         {/* Weekly Blocks */}
-        <div className="flex items-center gap-0.5 pt-5">
+        <div className="flex items-center sm:gap-0.5 pt-5">
           {weeksData.map((week, i) => (
             <span
               key={i}
