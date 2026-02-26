@@ -40,7 +40,7 @@ export default function Home() {
           </div>
         </div>
         <div className="p-6">
-          <div className="mx-auto grid grid-cols-2 gap-4">
+          <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="w-full h-[184px] rounded-xl border border-gray-200 bg-gradient-to-b from-white to-gray-100 p-6">
               <div className="text-gray-400">This Month Goal</div>
               <div className="flex flex-col justify-center h-full list-disc pb-6 gap-1">

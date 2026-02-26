@@ -28,12 +28,12 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="px-4 xl:px-28 py-10 relative">
+    <div className="min-w-[320px] px-4 xl:px-28 py-10 relative">
       <button
         onClick={() => setIsOpen?.(!isOpen)}
         className="absolute top-2 xl:hidden font-bold flex justify-center items-center gap-1 px-1 cursor-pointer"
       >
-        <span>{isOpen ? <GrMenu /> : <GrClose />}</span>
+        <span>{isOpen ? <GrClose /> : <GrMenu />}</span>
         <span>Menu</span>
       </button>
       <div className="flex rounded-lg border border-gray-200 bg-gray-100 p-2 relative">
