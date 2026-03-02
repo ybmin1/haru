@@ -51,7 +51,7 @@ export default function WeeklyGoalItem({
             value={task.text}
             onChange={(e) => handleTaskChange(e, weekIdx, taskIdx)}
             required={taskIdx === 0}
-            className="w-[300px] pb-0.5 mb-2"
+            className="w-full pb-0.5 mb-2"
           />
         ))}
       </div>

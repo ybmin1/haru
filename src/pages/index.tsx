@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <>
       <div className="w-full rounded-lg border border-gray-200 bg-white">
-        <div className="flex items-center justify-between h-[47px] border-b border-gray-200 px-6">
+        <div className="flex items-center justify-between h-[70px] border-b border-gray-200 px-6">
           <div className="flex items-center gap-2">
             <GoGoal className="font-bold" />
             {`Final Goal: ${finalGoalData.title}`}
