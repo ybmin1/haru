@@ -20,10 +20,10 @@ export default function GoalSetup() {
       <div className="flex flex-col pb-6 gap-5">
         <div className="text-3xl font-bold">Set Up Goals</div>
         <div className="text-gray-500">
-          Set up goals for this month and break down to weekly tasks
+          Set monthly goals and break them into weekly tasks
         </div>
       </div>
-      <div className=" border border-gray-200 rounded-lg px-14 py-20">
+      <div className="border border-gray-200 rounded-lg px-2 md:px-14 py-20">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-5">
             <div className="flex flex-col border border-gray-200 rounded-lg px-10 py-3 gap-2">
@@ -33,7 +33,7 @@ export default function GoalSetup() {
                 placeholder="Please enter final goal"
                 value={finalTitle}
                 onChange={handleFinalTitleChange}
-                className="w-[300px]"
+                className="w-full"
                 required
               />
             </div>
@@ -46,7 +46,7 @@ export default function GoalSetup() {
                 placeholder="Please enter this month's goal"
                 value={monthTitle}
                 onChange={handleMonthTitleChange}
-                className="w-[300px]"
+                className="w-full"
                 required
               />
             </div>
