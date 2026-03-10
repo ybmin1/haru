@@ -8,7 +8,7 @@ import { getNewWeeks } from "@/utils/goalUtils";
 import { Task, WeeklyGoal } from "@/types/goal";
 import { useGoalSource, useGoalStore } from "@/stores/useGoalStore";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 type WeeklyGoalDraft = Partial<WeeklyGoal> & {
@@ -76,24 +76,27 @@ export function useGoalSetupForm() {
   };
   const handleMonthTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setMonthTitle(e.target.value);
-  const handleTaskChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    weekIdx: number,
-    taskIdx: number,
-  ) => {
-    setWeeks((prev) =>
-      prev.map((w, wIdx) =>
-        wIdx === weekIdx
-          ? {
-              ...w,
-              tasks: w.tasks.map((t, tIdx) =>
-                tIdx === taskIdx ? { ...t, text: e.target.value } : t,
-              ),
-            }
-          : w,
-      ),
-    );
-  };
+  const handleTaskChange = useCallback(
+    (
+      e: React.ChangeEvent<HTMLInputElement>,
+      weekIdx: number,
+      taskIdx: number,
+    ) => {
+      setWeeks((prev) =>
+        prev.map((w, wIdx) =>
+          wIdx === weekIdx
+            ? {
+                ...w,
+                tasks: w.tasks.map((t, tIdx) =>
+                  tIdx === taskIdx ? { ...t, text: e.target.value } : t,
+                ),
+              }
+            : w,
+        ),
+      );
+    },
+    [],
+  );
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     //🔥 Zustand store 내부 state를 직접 초기화
@@ -152,13 +155,13 @@ export function useGoalSetupForm() {
     window.alert("Goals saved successfully!");
     router.push("/");
   };
-  const handleToggle = (weekIdx: number) => {
+  const handleToggle = useCallback((weekIdx: number) => {
     setWeeks((prev) =>
       prev.map((week, i) =>
         i === weekIdx ? { ...week, isOpen: !week.isOpen } : week,
       ),
     );
-  };
+  }, []);
 
   return {
     // State

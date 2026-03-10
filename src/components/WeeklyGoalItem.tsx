@@ -1,6 +1,8 @@
 import { baseDate, getWeekRange } from "@/utils/dateUtils";
 import { WeeklyGoal } from "@/types/goal";
 
+import React from "react";
+
 import { GoChevronDown } from "react-icons/go";
 import { GoChevronUp } from "react-icons/go";
 
@@ -15,7 +17,7 @@ type Props = {
   handleToggle: (weekIdx: number) => void;
 };
 
-export default function WeeklyGoalItem({
+function WeeklyGoalItem({
   handleTaskChange,
   handleToggle,
   week,
@@ -58,3 +60,5 @@ export default function WeeklyGoalItem({
     </div>
   );
 }
+
+export default React.memo(WeeklyGoalItem);
