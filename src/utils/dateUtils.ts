@@ -27,10 +27,11 @@ export function getMonthYear(date: Date) {
   return `${month} ${year}`;
 }
 
+//first Monday of this month
 export function getFirstMonday(date: Date) {
   const firstOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
   const day = firstOfMonth.getDay();
-  const daysToMonday = day === 0 ? -6 : 1 - day;
+  const daysToMonday = day === 0 ? 1 : day === 1 ? 0 : 8 - day;
   const firstMonday = new Date(
     date.getFullYear(),
     date.getMonth(),
