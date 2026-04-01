@@ -51,7 +51,7 @@ export function getWeeksInMonth(date: Date) {
     (getLastDateOfMonth(date).getDate() - getFirstMonday(date).getDate() + 1) /
       7,
   );
-  return Math.max(4, weeks); //minimum 4 weeks
+  return weeks;
 }
 
 export function getWeekStart(date: Date, weekIndex: number) {
