@@ -52,13 +52,13 @@ export default function GoalSetup() {
             </div>
             <div className="flex flex-col border border-gray-200 rounded-lg px-10">
               <div className="flex flex-col">
-                {weeks.map((week, weekIdx) => (
+                {weeks.map((week, i) => (
                   <WeeklyGoalItem
-                    key={weekIdx}
+                    key={week.id}
                     handleTaskChange={handleTaskChange}
                     handleToggle={handleToggle}
                     week={week}
-                    weekIdx={weekIdx}
+                    weekIdx={i}
                   />
                 ))}
               </div>

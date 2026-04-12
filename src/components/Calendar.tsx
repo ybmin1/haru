@@ -37,7 +37,6 @@ export default function Calendar() {
       weeksData.unshift({
         status,
         weekStart: weekStartStr,
-        wIdx: i,
       });
     }
     return weeksData;
@@ -70,9 +69,9 @@ export default function Calendar() {
         <div className="text-gray-400 mb-5">Calendar</div>
         {/* Weekly Blocks */}
         <div className="flex items-center sm:gap-0.5 pt-5">
-          {weeksData.map((week, i) => (
+          {weeksData.map((week) => (
             <span
-              key={i}
+              key={week.weekStart}
               className={`border border-gray-200 rounded-sm flex-1 h-25 mb-2 ${getColourClass(
                 week.status,
               )}`}
@@ -82,7 +81,7 @@ export default function Calendar() {
         {/* Month labels */}
         <div className="flex gap-1">
           {weeksData.map((week, index) => (
-            <span key={index} className="relative flex-1 h-6">
+            <span key={week.weekStart} className="relative flex-1 h-6">
               {isNewMonth(index) && (
                 <div className="absolute text-xs text-gray-600 whitespace-nowrap">
                   {new Date(week.weekStart).toLocaleDateString("en-EN", {
