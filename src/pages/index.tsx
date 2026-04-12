@@ -51,12 +51,12 @@ export default function Home() {
               <div className="text-gray-400">Tasks</div>
               <div className="flex flex-col justify-center h-full list-disc pb-6 gap-1">
                 {weeklyGoalData ? (
-                  weeklyGoalData.tasks.map((task, taskIdx) => (
-                    <label key={taskIdx}>
+                  weeklyGoalData.tasks.map((task, i) => (
+                    <label key={task.id}>
                       <input
                         type="checkbox"
                         checked={task.completed}
-                        onChange={(e) => handleCheckbox(weekId, taskIdx)}
+                        onChange={(e) => handleCheckbox(weekId, i)}
                         className="mr-1"
                       />
                       <span

@@ -45,14 +45,14 @@ function WeeklyGoalItem({
               ${week.isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
             `}
       >
-        {week?.tasks?.map((task, taskIdx) => (
+        {week?.tasks?.map((task, i) => (
           <input
-            key={taskIdx}
+            key={task.id}
             type="text"
-            placeholder={`Please enter task ${taskIdx + 1}`}
+            placeholder={`Please enter task ${i + 1}`}
             value={task.text}
-            onChange={(e) => handleTaskChange(e, weekIdx, taskIdx)}
-            required={taskIdx === 0}
+            onChange={(e) => handleTaskChange(e, weekIdx, i)}
+            required={i === 0}
             className="w-full pb-0.5 mb-2"
           />
         ))}
