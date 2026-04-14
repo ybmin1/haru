@@ -6,15 +6,15 @@ export default function Calendar() {
   const getWeeksData = () => {
     const weeksData = [];
     for (let i = 0; i <= 29; i++) {
-      //해당 주의 시작일 계산 (오늘부터 i주 전)
+      // Calculate the start date of the week (i weeks ago from today)
       const today = new Date();
       const weekStart = new Date(today);
       weekStart.setDate(today.getDate() - i * 7);
-      //해당 주의 월요일 찾기 (시작 요일이 월요일인 경우를 제외하고는 과거로 돌아가기에 음수여야함)
+      // Find Monday of the week (it's negative because we're going back in time, except when the start day is already Monday)
       const daysToMonday = -(weekStart.getDay() - 1 + 7) % 7;
       weekStart.setDate(weekStart.getDate() + daysToMonday);
       const weekStartStr = weekStart.toLocaleDateString("sv-SE");
-      //해당 weekStart에 해당하는 weeklyGoal찾기 (demo일 경우에는 demo데이터에서 찾는다)
+      // Find the weeklyGoal matching this weekStart (in demo mode, find from demo data)
       const matchingGoal = weeklyGoals.find(
         (goal) => goal.weekStart === weekStartStr,
       );

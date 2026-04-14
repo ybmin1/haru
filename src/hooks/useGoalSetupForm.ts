@@ -99,15 +99,6 @@ export function useGoalSetupForm() {
   );
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    //🔥 Zustand store 내부 state를 직접 초기화
-    // useGoalStore.setState({
-    //   finalGoal: null,
-    //   monthlyGoals: [],
-    //   weeklyGoals: [],
-    //   currentMonthId: null,
-    // });
-    //🔥 localStorage의 persist 데이터 삭제
-    // localStorage.removeItem("goal-storage");
 
     //if Demo mode, do not save and ask to switch
     if (isDemo) {
