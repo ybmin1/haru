@@ -13,6 +13,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 1280px)"); // xl = 1280px
     const handleResize = (e: MediaQueryListEvent | MediaQueryList) => {

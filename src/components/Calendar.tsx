@@ -42,6 +42,7 @@ export default function Calendar() {
     return weeksData;
   };
   const weeksData = getWeeksData();
+
   const getColourClass = (status: string) => {
     switch (status) {
       case "full":
@@ -55,6 +56,7 @@ export default function Calendar() {
         return "bg-white";
     }
   };
+
   const isNewMonth = (index: number) => {
     if (index === 0) return true;
     return (

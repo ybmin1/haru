@@ -97,9 +97,9 @@ export function useGoalSetupForm() {
     },
     [],
   );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     //if Demo mode, do not save and ask to switch
     if (isDemo) {
       const shouldSwitch = window.confirm(
@@ -110,7 +110,6 @@ export function useGoalSetupForm() {
       }
       return;
     }
-
     //user mode
     if (finalGoal) {
       updateFinalGoal({ title: finalTitle });
@@ -146,6 +145,7 @@ export function useGoalSetupForm() {
     window.alert("Goals saved successfully!");
     router.push("/");
   };
+
   const handleToggle = useCallback((weekIdx: number) => {
     setWeeks((prev) =>
       prev.map((week, i) =>
